@@ -22,9 +22,8 @@ dev_dependencies:
 flutter:
   assets: 
     - assets/icons/
-  uses-material-design: true
 
 fonts: 
   - family: Inter
     fonts:
-      - asset: lib/assets/fonts/Inter-VariableFont_slnt,wght.tff
+      - asset: assets/fonts/inter/

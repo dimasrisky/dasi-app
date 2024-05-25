@@ -8,6 +8,7 @@ import 'pages/pengeluaran_page.dart';
 import 'pages/manajemen_siswa_page.dart';
 import 'pages/form_pengeluaran.dart';
 import 'pages/form_pemasukan.dart';
+import 'pages/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      theme: ThemeData(fontFamily: 'Inter'),
+      home: LoginPage(),
       routes: {
         '/home': (context) => HomePage(),
         '/pengeluaran': (context) => PengeluaranPage(),
