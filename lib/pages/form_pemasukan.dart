@@ -5,11 +5,11 @@ class CustomFormField extends StatelessWidget {
   final String? title, hintText;
   final Function whenSave;
   const CustomFormField(
-      {super.key,
-      required this.title,
-      required this.hintText,
-      required this.whenSave
-    });
+    {super.key,
+    required this.title,
+    required this.hintText,
+    required this.whenSave
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +20,19 @@ class CustomFormField extends StatelessWidget {
           children: [
             Text(
               "$title",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 15, 
+                fontWeight: FontWeight.bold
+              ),
             ),
             SizedBox(height: 10),
             TextFormField(
               decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2, color: Color(0xff1f1f1f))),
-                  hintText: "$hintText"),
+                    borderSide: BorderSide(width: 2, color: Color(0xff1f1f1f))
+                  ),
+                  hintText: "$hintText"
+                ),
               validator: (value) {
                 if (value!.isEmpty) {
                   return "Kebutuhan Wajib Diisi";
@@ -63,12 +67,12 @@ class _FormPemasukanState extends State<FormPemasukan> {
       appBar: AppBar(
           centerTitle: true,
           leading: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(
-                Icons.arrow_back,
-                size: 20,
-                color: Colors.white,
-              )),
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Icon(
+              Icons.arrow_back,
+              size: 20,
+              color: Colors.white,
+            )),
           backgroundColor: Color(0xff070560),
           title: Text(
             "Form Pembayaran",
@@ -77,7 +81,8 @@ class _FormPemasukanState extends State<FormPemasukan> {
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
-          )),
+          )
+        ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Container(
@@ -86,22 +91,24 @@ class _FormPemasukanState extends State<FormPemasukan> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical: 30),
+                margin: EdgeInsets.only(top: 30),
                 width: 400,
-                padding: EdgeInsets.symmetric(vertical: 30),
+                padding: EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Color(0xff011E6C), Color(0xff033BD2)]),
-                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xff011E6C), Color(0xff033BD2)]
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
                 child: Center(
                   child: Text(
                     "Pembayaran Kas",
                     style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30
+                      ),
                   ),
                 ),
               ),
@@ -111,7 +118,7 @@ class _FormPemasukanState extends State<FormPemasukan> {
               Form(
                 key: _formKey,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 2),
                   child: Column(
                     children: [
                       CustomFormField(
@@ -141,10 +148,9 @@ class _FormPemasukanState extends State<FormPemasukan> {
                           nominal = double.parse(newValue);
                         },
                       ),
-                      SizedBox(height: 65),
+                      SizedBox(height: 30),
                       GestureDetector(
                           onTap: () {
-                            print('form terkirim');
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
                               FirebaseFirestore.instance
@@ -160,9 +166,11 @@ class _FormPemasukanState extends State<FormPemasukan> {
                           child: Container(
                             padding: EdgeInsets.symmetric(vertical: 20),
                             decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 10, 103, 180),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
+                              color: const Color.fromARGB(255, 10, 103, 180),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8)
+                              )
+                            ),
                             child: Center(
                               child: Text(
                                 "Bayar Kas",

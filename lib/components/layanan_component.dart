@@ -11,45 +11,48 @@ class ServiceComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: GestureDetector(
-      onTap: () => whenTap(),
-      child: Container(
-        height: 129,
-        decoration: BoxDecoration(
+      child: GestureDetector(
+        onTap: () => whenTap(),
+        child: Container(
+          height: 129,
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Color(0xff615EC7)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                      color: Color(0x17FFFFFF),
-                      borderRadius: BorderRadius.all(Radius.circular(50))),
-                ),
-                Icon(
-                  icon,
-                  size: 30,
-                  color: Colors.white
-                )
-              ],
-            ),
-            SizedBox(height: 9),
-            Text(
-              title,
-              style: TextStyle(
+            color: Color(0xff615EC7)
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        color: Color(0x17FFFFFF),
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
+                  ),
+                  Icon(
+                    icon,
+                    size: 30,
+                    color: Colors.white
+                  )
+                ],
+              ),
+              SizedBox(height: 9),
+              Text(
+                title,
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.w500),
-            )
-          ],
+                  fontWeight: FontWeight.w500
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-    ));
+      )
+    );
   }
 }
 
@@ -59,7 +62,7 @@ class LayananComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 50),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
