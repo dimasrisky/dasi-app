@@ -25,13 +25,15 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Inter'),
-      home: RegisterPage(),
+      home: HomePage(),
       routes: {
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
         '/home': (context) => HomePage(),
         '/pengeluaran': (context) => PengeluaranPage(),
         '/form_pengeluaran': (context) => FormPengeluaran(),
         '/form_pemasukan': (context) => FormPemasukan(),
-        '/manajemen_siswa': (context) => ManajemenSiswaPage()
+        '/manajemen_siswa': (context) => ManajemenSiswaPage(),
       }
     );
   }

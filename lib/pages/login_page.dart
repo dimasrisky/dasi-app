@@ -1,4 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+class CustomFormField extends StatelessWidget {
+  final String label;
+  final Function whenSave;
+  const CustomFormField({
+    super.key,
+    required this.label,
+    required this.whenSave
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Color(0xffC9C9C9))
+        ),
+      ),
+      validator: (value) {
+        if(value!.isEmpty){
+          return "please fill this field";
+        }
+
+        return null;
+      },
+      onSaved: (newValue) => whenSave(newValue),
+    );
+  }
+}
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,9 +42,12 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
+  late String username, password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15),
@@ -23,7 +58,11 @@ class LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 Center(
-                  child: Image.asset('assets/icons/logo.png'),
+                  child: Image.asset(
+                    'assets/icons/logo.png',
+                    width: 120,
+                    height: 110,
+                  ),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 40),
@@ -44,32 +83,44 @@ class LoginPageState extends State<LoginPage> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: "Email",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Color(0xffC9C9C9))
-                                ),
-                              ),
+                            CustomFormField(
+                              label: 'Email', 
+                              whenSave: (value){
+                                  setState(() {
+                                    username = value;
+                                  }
+                                );
+                              }
                             ),
                             SizedBox(height: 30),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: "Password",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Color(0xffC9C9C9))
-                                ),
-                              ),
+                            CustomFormField(
+                              label: 'Password', 
+                              whenSave: (value){
+                                  setState(() {
+                                    password = value;
+                                  }
+                                );
+                              }
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 50),
                               child: Column(
                                 children: [
                                   GestureDetector(
-                                    onTap: () {
-                                      print('sign in ditekan');
+                                    onTap: () async {
+                                      if(_formKey.currentState!.validate()){
+                                        _formKey.currentState!.save();
+                                        try{
+                                          await FirebaseAuth.instance.signInWithEmailAndPassword(email: username, password: password);
+                                          setState(() {
+                                            username = '';
+                                            password = '';
+                                          });
+                                          Navigator.pushNamed(context, '/home');
+                                        }catch(err){
+                                          print('login error');
+                                        }
+                                      }
                                     }, 
                                     child: Container(
                                       width: double.maxFinite,
@@ -104,7 +155,7 @@ class LoginPageState extends State<LoginPage> {
                                       SizedBox(width: 5),
                                       GestureDetector(
                                         onTap: () {
-                                          print('sign up ditekan');
+                                          Navigator.pushNamed(context, '/register');
                                         },
                                         child: Text(
                                           'Sign up',
@@ -114,7 +165,7 @@ class LoginPageState extends State<LoginPage> {
                                             fontWeight: FontWeight.w400
                                           ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   )
                                 ],
