@@ -1,5 +1,9 @@
 plugins {
+<<<<<<< HEAD
   id 'com.google.gms.google-services'
+=======
+    id 'com.google.gms.google-services'
+>>>>>>> c4d1b39c17ed8987eea2bd8400aad9d9aceb6032
 }
 
 allprojects {
@@ -9,11 +13,10 @@ allprojects {
     }
 }
 
+
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
 }
 
@@ -21,3 +24,7 @@ tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c4d1b39c17ed8987eea2bd8400aad9d9aceb6032

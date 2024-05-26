@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CustomFormField extends StatelessWidget {
   final String label;
@@ -7,44 +7,44 @@ class CustomFormField extends StatelessWidget {
   const CustomFormField({
     super.key,
     required this.label,
-    required this.whenSave
+    required this.whenSave,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: label == 'Password' ? true : false,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Color(0xffC9C9C9))
-        ),
+  return TextFormField(
+    obscureText: label == 'Password' ? true : false,
+    decoration: InputDecoration(
+      labelText: label,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(color: Color(0xffC9C9C9))
       ),
-      validator: (value) {
-        if(value!.isEmpty){
-          return "please fill the $label";
-        }
+    ),
+    validator: (value) {
+      if(value == null || value.isEmpty) {
+        return 'Please fill the $label';
+      }
 
-        return null;
-      },
-      onSaved: (newValue) => whenSave(newValue),
+      return null;
+    },
+    onSaved: (newValue) => whenSave(newValue),
     );
   }
 }
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => LoginPageState();
+  State<RegisterPage> createState() => RegisterPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
-  late String username, password;
-  bool showSnackbar = false;
+class RegisterPageState extends State<RegisterPage> {
 
+  late String email, password;
+
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +72,7 @@ class LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Login to your account",
+                        "Registering your account",
                         style: TextStyle(
                           color: Color(0xff5A5A5A),
                           fontSize: 20,
@@ -84,23 +84,19 @@ class LoginPageState extends State<LoginPage> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            CustomFormField(
-                              label: 'Email', 
-                              whenSave: (value){
-                                  setState(() {
-                                    username = value;
-                                  }
-                                );
+                            CustomFormField(label: 'Email', 
+                              whenSave: (value) {
+                                setState(() {
+                                  email = value;
+                                });
                               }
                             ),
-                            SizedBox(height: 30),
-                            CustomFormField(
-                              label: 'Password', 
-                              whenSave: (value){
-                                  setState(() {
-                                    password = value;
-                                  }
-                                );
+                            SizedBox(height: 20),
+                            CustomFormField(label: 'Password', 
+                              whenSave: (value) {
+                                setState(() {
+                                  password = value;
+                                });
                               }
                             ),
                             Container(
@@ -112,15 +108,15 @@ class LoginPageState extends State<LoginPage> {
                                       if(_formKey.currentState!.validate()){
                                         _formKey.currentState!.save();
                                         try{
-                                          await FirebaseAuth.instance.signInWithEmailAndPassword(email: username, password: password);
-                                          setState(() {
-                                            username = '';
+                                          await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+                                          setState((){
+                                            email = '';
                                             password = '';
                                           });
-                                          Navigator.pushNamed(context, '/home');
-                                        }on FirebaseAuthException catch(err){
+                                          Navigator.pushNamed(context, '/login');
+                                        }on FirebaseAuthException catch(error){
                                           final errorSnackBar = SnackBar(
-                                            content: Text(err.code),
+                                            content: Text(error.code),
                                             backgroundColor: Colors.red,
                                             action: SnackBarAction(
                                               label: 'Close',
@@ -141,7 +137,7 @@ class LoginPageState extends State<LoginPage> {
                                         borderRadius: BorderRadius.all(Radius.circular(8))
                                       ),
                                       child: Text(
-                                        'Sign In',
+                                        'Sign up',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.white,
@@ -151,12 +147,12 @@ class LoginPageState extends State<LoginPage> {
                                       ),
                                     )
                                   ),
-                                  SizedBox(height: 25),
+                                  SizedBox(height: 15),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Don`t have account ?',
+                                        'Already have account ?',
                                         style: TextStyle(
                                           color: Color(0xff5A5A5A),
                                           fontSize: 12,
@@ -166,17 +162,17 @@ class LoginPageState extends State<LoginPage> {
                                       SizedBox(width: 5),
                                       GestureDetector(
                                         onTap: () {
-                                          Navigator.pushNamed(context, '/register');
+                                          Navigator.pushNamed(context, '/login');
                                         },
                                         child: Text(
-                                          'Sign up',
+                                          'Sign in',
                                           style: TextStyle(
                                             color: Color(0xff6987B7),
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400
                                           ),
                                         ),
-                                      ),
+                                      )
                                     ],
                                   )
                                 ],
