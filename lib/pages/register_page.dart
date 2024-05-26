@@ -13,21 +13,22 @@ class CustomFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
   return TextFormField(
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Color(0xffC9C9C9))
-        ),
+    obscureText: label == 'Password' ? true : false,
+    decoration: InputDecoration(
+      labelText: label,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(color: Color(0xffC9C9C9))
       ),
-      validator: (value) {
-        if(value == null || value.isEmpty) {
-          return 'Please enter your $label';
-        }
+    ),
+    validator: (value) {
+      if(value == null || value.isEmpty) {
+        return 'Please fill the $label';
+      }
 
-        return null;
-      },
-      onSaved: (newValue) => whenSave(newValue),
+      return null;
+    },
+    onSaved: (newValue) => whenSave(newValue),
     );
   }
 }
@@ -50,7 +51,7 @@ class RegisterPageState extends State<RegisterPage> {
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15),
+        padding: EdgeInsets.symmetric(horizontal: 25),
         child: Container(
           margin: EdgeInsets.only(top: 80),
           width: double.maxFinite,
@@ -99,7 +100,7 @@ class RegisterPageState extends State<RegisterPage> {
                               }
                             ),
                             Container(
-                              margin: EdgeInsets.only(top: 30),
+                              margin: EdgeInsets.only(top: 50),
                               child: Column(
                                 children: [
                                   GestureDetector(
@@ -113,8 +114,18 @@ class RegisterPageState extends State<RegisterPage> {
                                             password = '';
                                           });
                                           Navigator.pushNamed(context, '/login');
-                                        }catch(error){
-                                          print('register error');
+                                        }on FirebaseAuthException catch(error){
+                                          final errorSnackBar = SnackBar(
+                                            content: Text(error.code),
+                                            backgroundColor: Colors.red,
+                                            action: SnackBarAction(
+                                              label: 'Close',
+                                              onPressed: () {
+                                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                              },
+                                            ),
+                                          );
+                                          ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
                                         }
                                       }
                                     }, 

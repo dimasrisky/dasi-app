@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, use_full_hex_values_for_flutter_colors, prefer_const_literals_to_create_immutables
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/profile_kelas_component.dart';
 import '../components/total_pemasukan_component.dart';
@@ -166,6 +167,49 @@ class HomePage extends StatelessWidget{
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/manajemen_siswa');
               }
+            ),
+            SizedBox(height: 50),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: GestureDetector(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    color: Colors.white
+                  ),
+                  width: double.maxFinite,
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.logout,
+                          color: Color(0xff070560),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'K E L U A R',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xff070560),
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600
+                          ),
+                        )
+                      ],
+                    )
+                  )
+                ),
+                onTap: () async { 
+                  try{
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pushNamed(context, '/login');
+                  }catch(e){
+                    print(e);
+                  }
+                },
+              )
             ),
           ]
         ),

@@ -13,6 +13,7 @@ class CustomFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: label == 'Password' ? true : false,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(
@@ -22,7 +23,7 @@ class CustomFormField extends StatelessWidget {
       ),
       validator: (value) {
         if(value!.isEmpty){
-          return "please fill this field";
+          return "please fill the $label";
         }
 
         return null;
@@ -43,6 +44,7 @@ class LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
   late String username, password;
+  bool showSnackbar = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15),
+        padding: EdgeInsets.symmetric(horizontal: 25),
         child: Container(
           margin: EdgeInsets.only(top: 80),
           width: double.maxFinite,
@@ -117,8 +119,18 @@ class LoginPageState extends State<LoginPage> {
                                             password = '';
                                           });
                                           Navigator.pushNamed(context, '/home');
-                                        }catch(err){
-                                          print('login error');
+                                        }on FirebaseAuthException catch(err){
+                                          final errorSnackBar = SnackBar(
+                                            content: Text(err.code),
+                                            backgroundColor: Colors.red,
+                                            action: SnackBarAction(
+                                              label: 'Close',
+                                              onPressed: () {
+                                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                              },
+                                            ),
+                                          );
+                                          ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
                                         }
                                       }
                                     }, 
