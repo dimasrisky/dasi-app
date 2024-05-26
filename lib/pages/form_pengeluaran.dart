@@ -5,10 +5,11 @@ class CustomFormField extends StatelessWidget {
   final String? title, hintText;
   final Function whenSave;
   const CustomFormField(
-      {super.key,
-      required this.title,
-      required this.hintText,
-      required this.whenSave});
+    {super.key,
+    required this.title,
+    required this.hintText,
+    required this.whenSave}
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +25,15 @@ class CustomFormField extends StatelessWidget {
             SizedBox(height: 10),
             TextFormField(
               decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2, color: Color(0xff1f1f1f))),
-                  hintText: "$hintText"),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(
+                    width: 2, 
+                    color: Color(0xff1f1f1f)
+                  )
+                ),
+                hintText: "$hintText"
+              ),
               validator: (value) {
                 if (value!.isEmpty) {
                   return "Kebutuhan Wajib Diisi";
@@ -63,12 +69,13 @@ class _FormPengeluaranState extends State<FormPengeluaran> {
       appBar: AppBar(
           centerTitle: true,
           leading: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(
-                Icons.arrow_back,
-                size: 20,
-                color: Colors.white,
-              )),
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Icon(
+              Icons.arrow_back,
+              size: 20,
+              color: Colors.white,
+            )
+          ),
           backgroundColor: Color(0xff070560),
           title: Text(
             "Form Pengeluaran",
@@ -86,9 +93,9 @@ class _FormPengeluaranState extends State<FormPengeluaran> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical: 30),
+                margin: EdgeInsets.only(top: 30),
                 width: 400,
-                padding: EdgeInsets.symmetric(vertical: 30),
+                padding: EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                         begin: Alignment.topLeft,
@@ -111,7 +118,7 @@ class _FormPengeluaranState extends State<FormPengeluaran> {
               Form(
                 key: _formKey,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 2),
                   child: Column(
                     children: [
                       CustomFormField(
@@ -143,7 +150,7 @@ class _FormPengeluaranState extends State<FormPengeluaran> {
                           });
                         },
                       ),
-                      SizedBox(height: 65),
+                      SizedBox(height: 30),
                       GestureDetector(
                           onTap: () {
                             if (_formKey.currentState!.validate()) {

@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CardPembayaran extends StatelessWidget {
   final String nama, noAbsen;
   final tanggalBayar;
-  final double nominal;
+  final int nominal;
 
   const CardPembayaran({
     super.key,
@@ -21,68 +21,73 @@ class CardPembayaran extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 13, vertical: 9),
-        margin: EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(6)),
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 10, spreadRadius: 1, color: Color(0x25000000))
-            ]),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: Color(0xff4B6EEC),
-                          borderRadius: BorderRadius.all(Radius.circular(50))),
+      padding: EdgeInsets.symmetric(horizontal: 13, vertical: 9),
+      margin: EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(6)),
+        boxShadow: [
+          BoxShadow( blurRadius: 10, spreadRadius: 1, color: Color(0x25000000)
+          )
+        ]
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Color(0xff4B6EEC),
+                      borderRadius: BorderRadius.all(Radius.circular(50))
                     ),
-                    Text(
-                      "$noAbsen",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    )
-                  ],
-                ),
-                SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${tanggalBayar.toDate().toString().split(' ')[0]}",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Color(0xff2499CB),
-                          fontWeight: FontWeight.w400),
+                  ),
+                  Text(
+                    "$noAbsen",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white
                     ),
-                    Text(
-                      nama,
-                      style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                    )
-                  ],
-                )
-              ],
+                  )
+                ],
+              ),
+              SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${tanggalBayar.toDate().toString().split(' ')[0]}",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xff2499CB),
+                      fontWeight: FontWeight.w400
+                    ),
+                  ),
+                  Text(
+                    nama,
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  )
+                ],
+              )
+            ],
+          ),
+          Text(
+            " Rp ${nominal.toString()}",
+            style: TextStyle(
+              color: Color(0xff34DD28),
+              fontWeight: FontWeight.w500,
+              fontSize: 15
             ),
-            Text(
-              " Rp ${nominal.toString()}",
-              style: TextStyle(
-                  color: Color(0xff34DD28),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15),
-            )
-          ],
-        ));
+          )
+        ],
+      )
+    );
   }
 }
 
@@ -115,25 +120,26 @@ class PembayaranTerkiniComponent extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var listDocs = snapshot.data as List<DocumentSnapshot>;
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: listDocs.length,
-                  itemBuilder: (context, index) {
-                    return CardPembayaran(
-                      nama: listDocs[index]["nama"],
-                      noAbsen: listDocs[index]["no_absen"],
-                      nominal: listDocs[index]["nominal"],
-                      tanggalBayar: listDocs[index]["tanggal_bayar"],
-                    );
-                  },
+                return Container(
+                  height: 500,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: listDocs.length,
+                    itemBuilder: (context, index) {
+                      return CardPembayaran(
+                        nama: listDocs[index]["nama"],
+                        noAbsen: listDocs[index]["no_absen"],
+                        nominal: listDocs[index]["nominal"],
+                        tanggalBayar: listDocs[index]["tanggal_bayar"],
+                      );
+                    },
+                  ),
                 );
               }
-
               if (snapshot.hasError) {
                 print(snapshot.error);
                 return Center(child: Text('Data Error...'));
               }
-              
               return Text("Data Loading...");
             },
           )

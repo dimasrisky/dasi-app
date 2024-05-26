@@ -46,10 +46,11 @@ class _CardTotalPengeluaranState extends State<CardTotalPengeluaran> {
             Text(
               'Total Pengeluaran',
               style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 15,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500),
+                fontFamily: 'Inter',
+                fontSize: 15,
+                color: Colors.white,
+                fontWeight: FontWeight.w500
+              ),
             ),
             SizedBox(height: 7),
             FutureBuilder(
@@ -58,7 +59,7 @@ class _CardTotalPengeluaranState extends State<CardTotalPengeluaran> {
                 if(snapshot.hasData && snapshot.connectionState == ConnectionState.done){
                   double total = snapshot.data as double;
                   return Text(
-                    'Rp ${total.toString()}',
+                    'Rp ${total.toInt().toString()}',
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 33,
@@ -90,8 +91,7 @@ class _CardTotalPengeluaranState extends State<CardTotalPengeluaran> {
 
 class CardRincianPengeluaran extends StatelessWidget {
   final docID;
-  final int noUrut, jumlah;
-  final double total, harga_satuan;
+  final int noUrut, jumlah, total, harga_satuan;
   final String kebutuhan;
   final Timestamp tanggal;
 
@@ -109,58 +109,59 @@ class CardRincianPengeluaran extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 8),
         child: Container(
           margin: EdgeInsets.only(bottom: 25),
-          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          padding: EdgeInsets.symmetric(horizontal: 17, vertical: 14),
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 10, spreadRadius: 1, color: Color(0x25000000))
-              ]),
-          width: double.maxFinite,
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow( blurRadius: 10, spreadRadius: 1, color: Color(0x25000000))
+            ]
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          color: Color(0xff4B6EEC),
-                          borderRadius: BorderRadius.all(Radius.circular(12))),
-                    ),
-                    Text(
-                      noUrut.toString(),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 21),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  width: 16,
-                ),
+                // Stack(
+                //   alignment: Alignment.center,
+                //   children: [
+                //     Container(
+                //       width: 50,
+                //       height: 50,
+                //       decoration: BoxDecoration(
+                //         color: Color(0xff4B6EEC),
+                //         borderRadius: BorderRadius.all(Radius.circular(60))
+                //       ),
+                //     ),
+                //     Text(
+                //       noUrut.toString(),
+                //       style: TextStyle(
+                //         color: Colors.white,
+                //         fontWeight: FontWeight.w700,
+                //         fontSize: 21
+                //       ),
+                //     )
+                //   ],
+                // ),
+                // SizedBox(
+                //   width: 16,
+                // ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       tanggal.toDate().toString().split(' ')[0],
                       style: TextStyle(
-                          color: Color.fromARGB(255, 91, 124, 243),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600),
+                        color: Color.fromARGB(255, 91, 124, 243),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600
+                      ),
                     ),
                     Text(
                       "$kebutuhan",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 13),
                     Row(
@@ -196,30 +197,32 @@ class CardRincianPengeluaran extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       fontSize: 16),
                 ),
-                SizedBox(width: 20),
+                SizedBox(width: 10),
                 Column(
                   children: [
                     IconButton(
-                        onPressed: () {
-                          FirebaseFirestore.instance.collection('pengeluaran')
-                                .doc(docID)
-                                .delete().then((value) => print("berhasil dihapus"));
-                          Navigator.pushNamed(context, '/pengeluaran');
-                        },
-                        icon: Icon(
-                          Icons.delete,
-                          size: 25,
-                          color: Color(0xff1F1F1F),
-                        )),
+                      onPressed: () {
+                        FirebaseFirestore.instance.collection('pengeluaran')
+                          .doc(docID)
+                          .delete().then((value) => print("berhasil dihapus"));
+                        Navigator.pushNamed(context, '/pengeluaran');
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        size: 25,
+                        color: Color(0xff1F1F1F),
+                      )
+                    ),
                     IconButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => FormEditPengeluaran(id: docID)));
-                        },
-                        icon: Icon(
-                          Icons.edit,
-                          size: 25,
-                          color: Color(0xff1F1F1F),
-                        )),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => FormEditPengeluaran(id: docID)));
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        size: 25,
+                        color: Color(0xff1F1F1F),
+                      )
+                    ),
                   ],
                 )
               ])

@@ -60,7 +60,7 @@ class _TotalPemasukanComponentState extends State<TotalPemasukanComponent> {
                       if(snapshot.hasData){
                         double total = snapshot.data as double;
                         return Text(
-                          "Rp  ${total.toString()}",
+                          "Rp  ${total.toInt().toString()}",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 30,
