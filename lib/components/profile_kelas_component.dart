@@ -41,14 +41,14 @@ class ProfileKelasComponent extends StatelessWidget {
               Text(
                 'XI RPL C',
                 style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
                     color: Colors.grey[400]),
               ),
               Text(
                 'Selamat Datang',
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
                     fontWeight: FontWeight.w700,
                     color: Colors.black),
               )

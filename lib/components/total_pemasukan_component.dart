@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../functions/total_saldo.dart';
 
 
 class TotalPemasukanComponent extends StatefulWidget {
@@ -12,19 +12,6 @@ class TotalPemasukanComponent extends StatefulWidget {
 }
 
 class _TotalPemasukanComponentState extends State<TotalPemasukanComponent> {
-
-  Future<void> ambilSemuaDokumenPemasukan() async {
-    CollectionReference pengeluaran = FirebaseFirestore.instance.collection('pemasukan');
-    return pengeluaran
-      .get()
-      .then((QuerySnapshot snapshot) {
-        double total_pemasukan = 0;
-        snapshot.docs.forEach((doc) {
-          total_pemasukan += doc["nominal"];
-        });
-        return total_pemasukan;
-      });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,23 +34,23 @@ class _TotalPemasukanComponentState extends State<TotalPemasukanComponent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Total Pendapatan',
+                    'Saldo Saat Ini',
                     style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 15,
+                        fontSize: 18,
                         color: Colors.white,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.bold
+                      ),
                   ),
                   FutureBuilder(
-                    future: ambilSemuaDokumenPemasukan(), 
+                    future: totalSaldo(), 
                     builder: (context, snapshot) {
                       if(snapshot.hasData){
-                        double total = snapshot.data as double;
+                        int total = snapshot.data as int;
                         return Text(
-                          "Rp  ${total.toInt().toString()}",
+                          "Rp  ${total.toString()}",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 30,
+                            fontSize: 32,
                             fontWeight: FontWeight.bold
                           ),
                         );

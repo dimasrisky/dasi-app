@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:refresh_materi/functions/total_saldo.dart';
 
 class CustomFormField extends StatelessWidget {
-  final String? title, hintText;
+  final String title, hintText, uid;
   final Function whenSave;
   const CustomFormField(
     {super.key,
+    required this.uid,
     required this.title,
     required this.hintText,
     required this.whenSave}
@@ -24,6 +26,7 @@ class CustomFormField extends StatelessWidget {
             ),
             SizedBox(height: 10),
             TextFormField(
+              keyboardType: uid == 'hrgst' || uid == 'jmlh' ? TextInputType.number : TextInputType.text,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -36,7 +39,7 @@ class CustomFormField extends StatelessWidget {
               ),
               validator: (value) {
                 if (value!.isEmpty) {
-                  return "Kebutuhan Wajib Diisi";
+                  return "$title Wajib Diisi";
                 }
                 return null;
               },
@@ -59,9 +62,50 @@ class FormPengeluaran extends StatefulWidget {
 class _FormPengeluaranState extends State<FormPengeluaran> {
   final _formKey = GlobalKey<FormState>();
 
-  String? kebutuhan;
-  int jumlah = 0;
-  double harga_satuan = 0;
+  late String kebutuhan;
+  late int jumlah, harga_satuan = 0;
+
+  Future<void> submitPengeluaran(String kebutuhan, int harga_satuan, int jumlah) async {
+    try{
+      int total = harga_satuan * jumlah;
+      var total_saldo = await totalSaldo();
+      if(total_saldo - total <= 0){
+        final snackBar = SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Saldo tidak cukup'),
+          action: SnackBarAction(
+            label: 'Close', 
+            onPressed: (){
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            }
+          )
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }else{
+        await FirebaseFirestore.instance
+          .collection("pengeluaran")
+          .add({
+            "harga_satuan": harga_satuan,
+            "jumlah": jumlah,
+            "kebutuhan": kebutuhan,
+            "tanggal": DateTime.now(),
+            "total": harga_satuan * jumlah
+          })
+        .then((value) => Navigator.pushReplacementNamed(context, '/pengeluaran'));
+      }
+    }catch(error){
+      final snackBar = SnackBar(
+        backgroundColor: Colors.red,
+        content: Text('Data gagal dimasukkan'),
+        action: SnackBarAction(
+          label: 'Close', 
+          onPressed: (){
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          }),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +166,7 @@ class _FormPengeluaranState extends State<FormPengeluaran> {
                   child: Column(
                     children: [
                       CustomFormField(
+                        uid: 'kbthn',
                         title: "Kebutuhan",
                         hintText: "Masukkan Input Kebutuhan...",
                         whenSave: (newValue) {
@@ -132,21 +177,23 @@ class _FormPengeluaranState extends State<FormPengeluaran> {
                       ),
                       SizedBox(height: 15),
                       CustomFormField(
+                        uid: 'hrgst',
                         title: "Harga Satuan",
                         hintText: "Masukkan harga...",
                         whenSave: (newValue) {
                           setState(() {
-                            harga_satuan = double.parse(newValue);
+                            harga_satuan = int.tryParse(newValue) ?? 0;
                           });
                         },
                       ),
                       SizedBox(height: 15),
                       CustomFormField(
+                        uid: 'jmlh',
                         title: "Jumlah",
                         hintText: "Masukkan Jumlah...",
                         whenSave: (newValue) {
                           setState(() {
-                            jumlah = int.parse(newValue);
+                            jumlah = int.tryParse(newValue) ?? 0;
                           });
                         },
                       ),
@@ -155,16 +202,7 @@ class _FormPengeluaranState extends State<FormPengeluaran> {
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
-                              FirebaseFirestore.instance
-                                  .collection("pengeluaran")
-                                  .add({
-                                "harga_satuan": harga_satuan,
-                                "jumlah": jumlah,
-                                "kebutuhan": kebutuhan,
-                                "tanggal": DateTime.now(),
-                                "total": harga_satuan * jumlah
-                              })
-                              .then((value) => Navigator.pushNamed(context, '/pengeluaran'));
+                              submitPengeluaran(kebutuhan, harga_satuan, jumlah);
                             }
                           },
                           child: Container(

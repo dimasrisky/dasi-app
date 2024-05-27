@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CustomFormField extends StatelessWidget {
-  final String? title, hintText;
+  final String title, hintText, uid;
   final Function whenSave;
-  const CustomFormField(
-    {super.key,
+  const CustomFormField({
+    super.key,
+    required this.uid,
     required this.title,
     required this.hintText,
     required this.whenSave
@@ -27,12 +28,13 @@ class CustomFormField extends StatelessWidget {
             ),
             SizedBox(height: 10),
             TextFormField(
+              keyboardType: uid == 'jmlh' ? TextInputType.number : TextInputType.text,
               decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Color(0xff1f1f1f))
-                  ),
-                  hintText: "$hintText"
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2, color: Color(0xff1f1f1f))
                 ),
+                hintText: "$hintText"
+              ),
               validator: (value) {
                 if (value!.isEmpty) {
                   return "Kebutuhan Wajib Diisi";
@@ -59,7 +61,7 @@ class _FormPemasukanState extends State<FormPemasukan> {
   final _formKey = GlobalKey<FormState>();
 
   String? nama, no_absen;
-  var nominal;
+  late int nominal = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +124,7 @@ class _FormPemasukanState extends State<FormPemasukan> {
                   child: Column(
                     children: [
                       CustomFormField(
+                        uid: 'nama',
                         title: "Nama",
                         hintText: "Masukkan Nama...",
                         whenSave: (newValue) {
@@ -132,6 +135,7 @@ class _FormPemasukanState extends State<FormPemasukan> {
                       ),
                       SizedBox(height: 15),
                       CustomFormField(
+                        uid: 'absn',
                         title: "No Absen",
                         hintText: "Masukkan No Absen...",
                         whenSave: (newValue) {
@@ -142,10 +146,13 @@ class _FormPemasukanState extends State<FormPemasukan> {
                       ),
                       SizedBox(height: 15),
                       CustomFormField(
+                        uid: 'jmlh',
                         title: "Nominal",
                         hintText: "Masukkan Nominal...",
                         whenSave: (newValue) {
-                          nominal = double.parse(newValue);
+                          setState(() {
+                            nominal = int.tryParse(newValue) ?? 0;
+                          });
                         },
                       ),
                       SizedBox(height: 30),
@@ -160,7 +167,7 @@ class _FormPemasukanState extends State<FormPemasukan> {
                                 "no_absen": no_absen,
                                 "nominal": nominal,
                                 "tanggal_bayar": DateTime.now()
-                              }).then((value) => {Navigator.pushNamed(context, '/home')});
+                              }).then((value) => Navigator.pushNamed(context, '/home'));
                             }
                           },
                           child: Container(

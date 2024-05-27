@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors, use_full_hex_values_for_flutter_colors, prefer_const_literals_to_create_immutables
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'form_edit_pengeluaran.dart';
+import '../functions/total_pengeluaran.dart';
 
 class CardTotalPengeluaran extends StatefulWidget {
   const CardTotalPengeluaran({super.key});
@@ -12,19 +13,6 @@ class CardTotalPengeluaran extends StatefulWidget {
 
 class _CardTotalPengeluaranState extends State<CardTotalPengeluaran> {
 
-  Future<void> ambilSemuaDocumentPengeluaran() async {
-    CollectionReference pengeluaran = await FirebaseFirestore.instance.collection('pengeluaran');
-    return pengeluaran
-      .get()
-      .then((QuerySnapshot snapshot) {
-        double total_pengeluaran = 0;
-        snapshot.docs.forEach((doc) {
-          total_pengeluaran += doc["total"];
-        });
-        return total_pengeluaran;
-      });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,11 +22,15 @@ class _CardTotalPengeluaranState extends State<CardTotalPengeluaran> {
         width: double.maxFinite,
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 45),
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xff011E6C), Color(0xff033BD2)]),
-            borderRadius: BorderRadius.all(Radius.circular(15))),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xff011E6C), Color(0xff033BD2)]
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(15)
+          )
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -54,27 +46,29 @@ class _CardTotalPengeluaranState extends State<CardTotalPengeluaran> {
             ),
             SizedBox(height: 7),
             FutureBuilder(
-              future: ambilSemuaDocumentPengeluaran(), 
+              future: totalPengeluaran(), 
               builder: (context, snapshot) {
                 if(snapshot.hasData && snapshot.connectionState == ConnectionState.done){
-                  double total = snapshot.data as double;
+                  int total = snapshot.data as int;
                   return Text(
                     'Rp ${total.toInt().toString()}',
                     style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 33,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
+                      fontFamily: 'Inter',
+                      fontSize: 33,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600
+                    ),
                   );
                 }
                 if(snapshot.hasError){
                   return Text(
                     'Rp ${snapshot.error}',
                     style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 33,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
+                      fontFamily: 'Inter',
+                      fontSize: 33,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600
+                    ),
                   );
                 }
 
@@ -91,14 +85,13 @@ class _CardTotalPengeluaranState extends State<CardTotalPengeluaran> {
 
 class CardRincianPengeluaran extends StatelessWidget {
   final docID;
-  final int noUrut, jumlah, total, harga_satuan;
+  final int jumlah, total, harga_satuan;
   final String kebutuhan;
   final Timestamp tanggal;
 
   const CardRincianPengeluaran({
     super.key,
     this.docID,
-    required this.noUrut,
     required this.kebutuhan,
     required this.harga_satuan,
     required this.jumlah,
@@ -124,30 +117,6 @@ class CardRincianPengeluaran extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(children: [
-                // Stack(
-                //   alignment: Alignment.center,
-                //   children: [
-                //     Container(
-                //       width: 50,
-                //       height: 50,
-                //       decoration: BoxDecoration(
-                //         color: Color(0xff4B6EEC),
-                //         borderRadius: BorderRadius.all(Radius.circular(60))
-                //       ),
-                //     ),
-                //     Text(
-                //       noUrut.toString(),
-                //       style: TextStyle(
-                //         color: Colors.white,
-                //         fontWeight: FontWeight.w700,
-                //         fontSize: 21
-                //       ),
-                //     )
-                //   ],
-                // ),
-                // SizedBox(
-                //   width: 16,
-                // ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -204,8 +173,7 @@ class CardRincianPengeluaran extends StatelessWidget {
                       onPressed: () {
                         FirebaseFirestore.instance.collection('pengeluaran')
                           .doc(docID)
-                          .delete().then((value) => print("berhasil dihapus"));
-                        Navigator.pushNamed(context, '/pengeluaran');
+                          .delete().then((value) =>  Navigator.pushNamed(context, '/home'));
                       },
                       icon: Icon(
                         Icons.delete,
@@ -236,8 +204,7 @@ class PengeluaranPage extends StatelessWidget {
   const PengeluaranPage({super.key});
 
   Future<void> rincianPengeluaran() async {
-    CollectionReference pengeluaran =
-        await FirebaseFirestore.instance.collection('pengeluaran');
+    CollectionReference pengeluaran = await FirebaseFirestore.instance.collection('pengeluaran');
     return pengeluaran.get().then((QuerySnapshot snapshot) => snapshot.docs);
   }
 
@@ -247,12 +214,13 @@ class PengeluaranPage extends StatelessWidget {
         appBar: AppBar(
             centerTitle: true,
             leading: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 20,
-                  color: Colors.white,
-                )),
+              onPressed: () => Navigator.pushNamed(context, '/home'),
+              icon: Icon(
+                Icons.home_rounded,
+                size: 30,
+                color: Colors.white,
+              )
+            ),
             backgroundColor: Color(0xff070560),
             title: Text(
               "Pengeluaran",
@@ -271,13 +239,20 @@ class PengeluaranPage extends StatelessWidget {
                 child: Container(
                   margin: EdgeInsets.only(top: 30, bottom: 10),
                   child: Text("Rincian Pengeluaran",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                )),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, 
+                      fontSize: 20
+                    )
+                  ),
+                )
+              ),
             Expanded(
               child: FutureBuilder(
                 future: rincianPengeluaran(),
                 builder: (context, snapshot) {
+                  if(snapshot.hasError){
+                    print(snapshot.error);
+                  }
                   if (snapshot.hasData) {
                     var listDocs = snapshot.data as List<DocumentSnapshot>;
                     return ListView.builder(
@@ -285,7 +260,6 @@ class PengeluaranPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return CardRincianPengeluaran(
                             docID: listDocs[index].id,
-                            noUrut: index + 1,
                             kebutuhan: listDocs[index]["kebutuhan"],
                             harga_satuan: listDocs[index]["harga_satuan"],
                             jumlah: listDocs[index]["jumlah"],

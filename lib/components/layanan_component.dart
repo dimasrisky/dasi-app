@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class ServiceComponent extends StatelessWidget {
   final String title;
   final Function whenTap;
-  final icon;
-  const ServiceComponent({super.key, required this.title, required this.whenTap, this.icon});
+  final img_path;
+  const ServiceComponent({super.key, required this.title, required this.whenTap, this.img_path});
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +32,10 @@ class ServiceComponent extends StatelessWidget {
                         color: Color(0x17FFFFFF),
                         borderRadius: BorderRadius.all(Radius.circular(50))),
                   ),
-                  Icon(
-                    icon,
-                    size: 30,
-                    color: Colors.white
+                  Image.asset(
+                    img_path,
+                    width: 40,
+                    height: 40,
                   )
                 ],
               ),
@@ -72,9 +72,9 @@ class LayananComponent extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Row(children: [
-            ServiceComponent(title: "Bayar Kas", whenTap: () => Navigator.pushNamed(context, '/form_pemasukan'), icon: Icons.payment),
+            ServiceComponent(title: "Bayar Kas", whenTap: () => Navigator.pushNamed(context, '/form_pemasukan'), img_path: 'assets/icons/bayar_kas.png'),
             SizedBox(width: 8),
-            ServiceComponent(title: "Buat Pengeluaran", whenTap: () => Navigator.pushNamed(context, '/form_pengeluaran'), icon: Icons.money),
+            ServiceComponent(title: "Buat Pengeluaran", whenTap: () => Navigator.pushNamed(context, '/form_pengeluaran'), img_path: 'assets/icons/pengeluaran.png'),
           ])
         ],
       ),
