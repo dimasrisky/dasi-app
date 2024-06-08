@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CardPembayaran extends StatelessWidget {
   final String nama, noAbsen;
   final tanggalBayar;
-  final int nominal;
+  final nominal;
 
   const CardPembayaran({
     super.key,
@@ -95,15 +95,14 @@ class PembayaranTerkiniComponent extends StatelessWidget {
   const PembayaranTerkiniComponent({super.key});
 
   Future<void> semuaPembayaranTerkini() async {
-    CollectionReference pemasukan =
-        await FirebaseFirestore.instance.collection('/pemasukan');
-    return pemasukan.get().then((QuerySnapshot snapshot) => snapshot.docs);
+    CollectionReference pemasukan = await FirebaseFirestore.instance.collection('/pemasukan');
+    return pemasukan.limit(5).orderBy('tanggal_bayar', descending: true).get().then((QuerySnapshot snapshot) => snapshot.docs);
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -114,7 +113,7 @@ class PembayaranTerkiniComponent extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 10),
           FutureBuilder(
             future: semuaPembayaranTerkini(),
             builder: (context, snapshot) {

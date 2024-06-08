@@ -117,10 +117,11 @@ class HomePage extends StatelessWidget{
               title: Text(
                 'P E N G E L U A R A N',
                 style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.white,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600),
+                  fontSize: 13,
+                  color: Colors.white,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600
+                ),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -137,10 +138,11 @@ class HomePage extends StatelessWidget{
               title: Text(
                 'B U A T  P E N G E L U A R A N',
                 style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.white,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600),
+                  fontSize: 13,
+                  color: Colors.white,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600
+                ),
               ),
               onTap: () {
                 Navigator.pop(context);

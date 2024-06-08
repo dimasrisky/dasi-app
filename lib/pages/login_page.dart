@@ -42,7 +42,7 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  late String username, password;
+  late String email, password;
   bool showSnackbar = false;
 
   @override
@@ -88,7 +88,7 @@ class LoginPageState extends State<LoginPage> {
                               label: 'Email', 
                               whenSave: (value){
                                   setState(() {
-                                    username = value;
+                                    email = value;
                                   }
                                 );
                               }
@@ -112,9 +112,9 @@ class LoginPageState extends State<LoginPage> {
                                       if(_formKey.currentState!.validate()){
                                         _formKey.currentState!.save();
                                         try{
-                                          await FirebaseAuth.instance.signInWithEmailAndPassword(email: username, password: password);
+                                          await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
                                           setState(() {
-                                            username = '';
+                                            email = '';
                                             password = '';
                                           });
                                           Navigator.pushNamed(context, '/home');
