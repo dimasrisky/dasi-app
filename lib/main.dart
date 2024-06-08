@@ -11,6 +11,8 @@ import 'pages/form_pengeluaran.dart';
 import 'pages/form_pemasukan.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
+import 'pages/splash_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +28,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Inter'),
-      home: HomePage(),
+      home: SplashScreen(),
       routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
