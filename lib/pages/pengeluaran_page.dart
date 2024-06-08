@@ -167,36 +167,57 @@ class CardRincianPengeluaran extends StatelessWidget {
                       fontSize: 16),
                 ),
                 SizedBox(width: 10),
-                Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        FirebaseFirestore.instance.collection('pengeluaran')
-                          .doc(docID)
-                          .delete().then((value) =>  Navigator.pushNamed(context, '/home'));
-                      },
-                      icon: Icon(
-                        Icons.delete,
-                        size: 25,
-                        color: Color(0xff1F1F1F),
+                PopupMenuButton(
+                  color: Colors.white,
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem(
+                        child: GestureDetector(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.edit,
+                                size: 25,
+                                color: Color(0xff1F1F1F),
+                              ),
+                              SizedBox(width: 10),
+                              Text("Edit")
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => FormEditPengeluaran(id: docID)));
+                          },
+                        ),
+                      ),
+                      PopupMenuItem(
+                        child: GestureDetector(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.delete,
+                                size: 25,
+                                color: Color(0xff1F1F1F),
+                              ),
+                              SizedBox(width: 10),
+                              Text("Hapus")
+                            ],
+                          ),
+                          onTap: () {
+                            FirebaseFirestore.instance.collection('pengeluaran')
+                              .doc(docID)
+                              .delete().then((value) =>  Navigator.pushNamed(context, '/home'));
+                          },
+                        ),
                       )
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => FormEditPengeluaran(id: docID)));
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        size: 25,
-                        color: Color(0xff1F1F1F),
-                      )
-                    ),
-                  ],
+                    ];
+                  },
                 )
-              ])
-            ],
-          ),
-        ));
+              ]
+            )
+          ],
+        ),
+      )
+    );
   }
 }
 
@@ -258,13 +279,17 @@ class PengeluaranPage extends StatelessWidget {
                     return ListView.builder(
                       itemCount: listDocs.length,
                       itemBuilder: (context, index) {
-                        return CardRincianPengeluaran(
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: CardRincianPengeluaran(
                             docID: listDocs[index].id,
                             kebutuhan: listDocs[index]["kebutuhan"],
                             harga_satuan: listDocs[index]["harga_satuan"],
                             jumlah: listDocs[index]["jumlah"],
                             total: listDocs[index]["total"],
-                            tanggal: listDocs[index]["tanggal"]);
+                            tanggal: listDocs[index]["tanggal"]
+                          ),
+                        );
                       },
                     );
                   }
